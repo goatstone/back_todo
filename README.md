@@ -1,3 +1,7 @@
+# Backbone Todo Example 
+
+Based on webpad demo, Backbone.js web site
+
 # webpack ES6 demo
 
 A small demo project that shows how to use webpack for client-side development in ECMAScript 6.

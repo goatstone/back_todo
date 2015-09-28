@@ -1,17 +1,20 @@
 /* goatstone.model.todo.js Jose Collas 9.2015 */
 
-var Sidebar = Backbone.Model.extend({
+var Todo = Backbone.Model.extend({
+   constructor: function() {
+    	this.defaults = {
+    		clickCount:0,
+    		color:'aqua'
+    	};
+    	Backbone.Model.apply(this, arguments);
+  },
   promptColor: function() {
-    var cssColor = "red";
-    this.set({color: cssColor});
+    this.set({color: 'red'});
+    this.logState();
+  },
+  logState: function(){
+  	console.log('todo model', this.attributes);
   }
 });
-var sb = new Sidebar;
-sb.on('change:color', function(model, color) {
-	console.log(this);
-  //$('body').css({background: color});
-});
-sb.set({color: 'white'});
-sb.promptColor();
 
-export default Sidebar;
+export default Todo;

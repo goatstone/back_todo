@@ -7,12 +7,12 @@ var Todo = Backbone.Model.extend({
     		title:'',
     		todo:''
     	};
-    	Backbone.Model.apply(this, arguments);
+    	Backbone.Model.apply(this, arguments)
   },
   getInformation: function(){
-  	var str = JSON.stringify(this.attributes);
-  	return 'todo model' + str ;
+  	var str = JSON.stringify(this.attributes)
+  	return 'todo model' + str 
   }
-});
+})
 
-export default Todo;
+export default Todo

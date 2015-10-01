@@ -1,34 +1,36 @@
 /* goatstone.ui.message Jose Collas 9.2015 */
+import dispatcher from 'goatstone/event/dispatcher';
 
 var Message = Backbone.View.extend({
   el: "body",
   events: {
     "click .count_it":          "countClick"
   },
-  initialize: function(settings) {
-    this.dispatcher = settings.dispatcher;
-    // TODO put this in the model!!!!
-    this.clicks = 0;
-
-    // element one
+  initialize: function() {
+    this.message = '0';
+    this.color = 'red';
+    this.forgroundColor = 'red'
     this.el_1 = document.createElement('div');
     this.el_1.setAttribute('class', 'count_it');
-    this.el_1.innerHTML = 'xxxx';
-//    this.listenTo(this.model, "change", this.render);
-
-    // append DOM elements to body
+    this.el_1.innerHTML = '1';
     this.el.appendChild(this.el_1);
   },
-  render: function() {
-    this.el_1.innerHTML = this.clicks;
+  set: function(msg) {
+    this.message = msg;
+    return this;
+  },
+  render: function(msg) {
+    this.el_1.style.backgroundColor = this.color;
+    this.el_1.innerHTML = this.message;
     return this; 
   },
-  countClick: function() {
-    // update the model with this event incrementClick
-    this.clicks++;
-    this.dispatcher.trigger('clickDOM', 1);
+  setColor: function(color){
+    this.color = color;
     this.render();
-  }
+    return this;
+  },
+  setTrigger:function(){
+    this.trigger('a');
+  },
 });
-
 export default Message;

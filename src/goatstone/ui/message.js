@@ -1,22 +1,33 @@
 /* goatstone.ui.message Jose Collas 9.2015 */
+import dispatcher from 'goatstone/event/dispatcher';
 
-var DocumentRow = Backbone.View.extend({
-  tagName: "li",
-  className: "document-row",
+var Message = Backbone.View.extend({
+  el: "body",
   events: {
-    "click .icon":          "open",
-    "click .button.edit":   "openEditDialog",
-    "click .button.delete": "destroy"
+    "click .count_it": "countClick"
   },
   initialize: function() {
-    this.listenTo(this.model, "change", this.render);
+    this.message = '0'
+    this.color = 'red'
+    this.forgroundColor = 'red'
+    this.el_1 = document.createElement('div')
+    this.el_1.setAttribute('class', 'count_it')
+    this.el_1.innerHTML = '1'
+    this.el.appendChild(this.el_1)
   },
-  render: function() {
-  	this.$el.html('<span class="icon">hello...XXX </span>');       
+  set: function(msg) {
+    this.message = msg
+    return this
   },
-  open:()=>{
-  	console.log('open');
+  render: function(msg) {
+    this.el_1.style.backgroundColor = this.color
+    this.el_1.innerHTML = this.message
+    return this 
+  },
+  setColor: function(color){
+    this.color = color
+    this.render()
+    return this
   }
 });
-
-export default DocumentRow;
+export default Message

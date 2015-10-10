@@ -1,5 +1,4 @@
-/*  */
-//
+//var p = new Point(1, 2);
 class Point {
     constructor(x, y) {
         this.x = x;

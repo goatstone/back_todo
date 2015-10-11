@@ -14,5 +14,9 @@
     "jquery2": "^2.0.3-a",
     "node-libs-browser": "*",
     "webpack": "*"
+  },
+  "dependencies": {
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0"
   }
 }

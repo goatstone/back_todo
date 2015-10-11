@@ -1,27 +1,27 @@
 /* goatstone/ui/input.js */
+var React = require('react');
+var ReactDOM = require('react-dom');
 var Input = Backbone.View.extend({
-  el: "body",
   events: {
     'keyup': function (v) {
-      this.color = '#ccc'
-      this.trigger('change',  this.el_1.value )
+      this.trigger('change',  this )
     }
   },
   initialize: function() {
-    this.color = 'azure'
-    this.el_1 = document.createElement('input')
-    this.el_1.style.color = 'black';
-    this.el_1.setAttribute('class', 'a')
-    this.el_1.value = 'enter'
-    this.el.appendChild(this.el_1)
-    this.el_1.focus();
+    this.style = {};
+    this.render()
+    return this;
   },
   render: function(msg) {
-    this.el_1.style.backgroundColor = this.color;
+    ReactDOM.render(<label style={this.style}><input /></label>, this.el)
     return this 
   },
+  setStyle: function(s){
+    this.style = s    
+    return this;
+  },
   focus: function(){
-    this.el_1.focus();
+    //this.el_1.focus();
   }
 })
 export default Input

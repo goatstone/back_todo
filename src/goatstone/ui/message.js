@@ -1,19 +1,12 @@
 /* goatstone.ui.message Jose Collas 9.2015 */
 import dispatcher from 'goatstone/event/dispatcher';
-
+var React = require('react');
+var ReactDOM = require('react-dom');
 var Message = Backbone.View.extend({
-  el: "body",
-  events: {
-    "click .count_it": "countClick"
-  },
-  initialize: function() {
+  initialize: function(a) {
     this.message = [],
-    this.color = 'red'
-    this.el_1 = document.createElement('div')
-    this.el_1.setAttribute('class', 'count_it')
-    this.ul = document.createElement('ul')
-    this.el_1.appendChild(this.ul);
-    this.el.appendChild(this.el_1)
+    this.style = {};
+    return this
   },
   set: function(msg) {
     this.message = [ msg ]
@@ -26,15 +19,15 @@ var Message = Backbone.View.extend({
     return this
   },
   render: function(msg) {
-    this.el_1.style.backgroundColor = this.color 
-    this.el_1.style.position = 'absolute'
-    this.el_1.style.bottom = 0 
-    this.el_1.style.right = 0 
-    this.ul.innerHTML = '<li>'+this.message.join("<li>")
+    ReactDOM.render(<div style={this.style}>{  this.message.join(':::') } </div>, this.el)
     return this 
   },
+  setStyle: function(s){
+    this.style = s    
+    return this;
+  },
   setColor: function(color){
-    this.color = color
+    this.style.color = color
     this.render()
     return this
   }

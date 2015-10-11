@@ -1,21 +1,42 @@
 /* goatstone/ui/color-control.js */
+var React = require('react');
+var ReactDOM = require('react-dom');
 var colorControl = Backbone.View.extend({
-  el: "body",
   events: {
-    "click .change_it": function (v) {
+    "click button[data-id=r]": function (v) {
     	this.trigger('change', {color:'red'})
+    },
+    "click button[data-id=g]": function (v) {
+      this.trigger('change', {color:'green'})
+    },
+    "click button[data-id=b]": function (v) {
+      this.trigger('change', {color:'blue'})
     }
   },
   initialize: function() {
-    this.color = 'azure'
-    this.el_1 = document.createElement('div')
-    this.el_1.setAttribute('class', 'change_it')
-    this.el_1.innerHTML = 'set color'
-    this.el.appendChild(this.el_1)
+    var colorStyle = {
+      color:'white',
+      padding:'6px', 
+      margin:'3px', 
+      borderRadius:'6px'
+    }
+    this.rStyle = Object.assign({}, colorStyle, {background:'red'})
+    this.gStyle = Object.assign({}, colorStyle, {background:'green'})
+    this.bStyle = Object.assign({}, colorStyle, {background:'blue'})
   },
   render: function(msg) {
-    //this.el_1.style.backgroundColor = this.color;
+    ReactDOM.render(
+      <div style={this.style}>  
+        <button data-id={'r'} style={this.rStyle}>R</button> 
+        <button data-id={'g'} style={this.gStyle}>G</button> 
+        <button data-id={'b'}  style={this.bStyle}>B</button> 
+        </div>, 
+      this.el)
     return this 
+  },
+  setStyle: function(s){
+    this.style = s    
+    return this;
   }
 })
 export default colorControl

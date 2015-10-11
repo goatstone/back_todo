@@ -1,22 +1,22 @@
 /* goatstone/ui/input.js */
+var React = require('react');
+var ReactDOM = require('react-dom');
 var Button = Backbone.View.extend({
-  el: "body",
   events: {
     'click button': function (v) {
       this.trigger('activate',  1 )
     }
   },
   initialize: function() {
-    this.color = 'azure'
-    this.el_1 = document.createElement('button')
-    this.el_1.style.color = 'black';
-    var txt = document.createTextNode('Add Todo')
-    this.el_1.appendChild(txt)
-    this.el.appendChild(this.el_1)
+    this.style = {color:'red'}
+    return this;
+  },
+  setStyle: function(s){
+    this.style = s    
     return this;
   },
   render: function(msg) {
-    this.el_1.style.backgroundColor = this.color;
+    ReactDOM.render(<button style={this.style}>Add Todo</button>, this.el)
     return this 
   } 
 })

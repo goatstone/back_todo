@@ -9,10 +9,68 @@ import Button from 'goatstone/ui/button'
 
 var todoModel, message, colorControl, input, button
 todoModel = new TodoModel()
-colorControl = new ColorControl()
-input = new Input().render()
-message = new Message().set('hello')
-button = new Button()
+
+var mainStyle = 	{ 
+      color: 'blue',
+      backgroundColor:'#ccc',
+      padding:'12px',
+      position:'relative',
+      display:'inline-block',
+      // margin:'12px',
+      borderRadius:'12px',
+      WebkitTransition: 'all', // note the capital 'W' here
+      msTransition: 'all' // 'ms' is the only lowercase vendor prefix
+    }
+var componentStyle = 	{ 
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      minHeight:'60px'
+    }
+var messageStyle = {
+    width:'90%',
+    margin:'6px'
+}
+
+var messageStyle = {}
+Object.assign(messageStyle, mainStyle, componentStyle, messageStyle)
+
+var mEl = document.createElement('span')
+message = new Message( {el:mEl} )
+.setStyle( messageStyle )
+.set( 'hello' )
+
+var iEl = document.createElement('span')
+input = new Input( {el:iEl} )
+.setStyle( mainStyle )
+.render()
+input.on('all', function(event, data){
+	//message.set( 'event:  ' +  event + ' data: '+data   ) 
+	todoModel.set({color: 'red'})
+})
+// button
+var bEl = document.createElement('span')
+button = new Button({el: bEl})
+.setStyle(  mainStyle   )
+.render()
+button.on('activate', function(v){
+	message.append('aaa' + v )
+	todoModel.set({title: ' hello todo'})
+})
+// colorControl Backone View
+var ccEl = document.createElement('span')
+colorControl = new ColorControl({el: ccEl})
+.setStyle(  mainStyle   )
+.render()
+colorControl.on('all', (name, data)=>{
+	message.append('all from color control', name, data)
+	message.setColor(data.color)
+})
+// add elements to DOM
+document.body.appendChild(iEl)
+document.body.appendChild(mEl)
+document.body.appendChild(bEl)
+document.body.appendChild(ccEl)
 
 // todoModel Backbone Model
 todoModel.on('init', function(){
@@ -23,20 +81,6 @@ todoModel.on('all', function(v){
 })
 todoModel.on('change:color', function(model, color) {
 	message.setColor(color)
-})
-// input
-input.on('all', function(event, data){
-	message.set( 'event:  ' +  event + ' data: '+data   ) 
-	todoModel.set({color: 'red'})
-})
-// button
-button.on('activate', function(v){
-	message.append('aaa' + v )
-	todoModel.set({title: ' hello todo'})
-})
-// colorControl Backone View
-colorControl.on('all', (name, data)=>{
-	message.append('all from color control', name, data)
 })
  
 // todoEventDispatcher
@@ -53,14 +97,11 @@ todoEventDispatcher.on('init', v => {
 */
 // todoEventDispatcher
 // .trigger( 'init', {id:12333} )
-// .trigger( 'a', {id:'X'} )
 // .trigger( 'hello', {id:2} )
-
-//message.trigger( 'change', { "color": "blue" } )
 
 todoModel.set({color: 'azure'})
 
 setTimeout(function(){
 	todoEventDispatcher.trigger( 'hello', {id:2222222} )
-	todoModel.set({color: '#ccc'})
+	todoModel.set({color: 'blue'})
 }, 1000)

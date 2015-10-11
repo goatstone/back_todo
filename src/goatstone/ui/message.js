@@ -7,21 +7,30 @@ var Message = Backbone.View.extend({
     "click .count_it": "countClick"
   },
   initialize: function() {
-    this.message = '0'
+    this.message = [],
     this.color = 'red'
-    this.forgroundColor = 'red'
     this.el_1 = document.createElement('div')
     this.el_1.setAttribute('class', 'count_it')
-    this.el_1.innerHTML = '1'
+    this.ul = document.createElement('ul')
+    this.el_1.appendChild(this.ul);
     this.el.appendChild(this.el_1)
   },
   set: function(msg) {
-    this.message = msg
+    this.message = [ msg ]
+    this.render()
+    return this
+  },
+  append: function(msg){
+    this.message.push(msg)
+    this.render()
     return this
   },
   render: function(msg) {
-    this.el_1.style.backgroundColor = this.color
-    this.el_1.innerHTML = this.message
+    this.el_1.style.backgroundColor = this.color 
+    this.el_1.style.position = 'absolute'
+    this.el_1.style.bottom = 0 
+    this.el_1.style.right = 0 
+    this.ul.innerHTML = '<li>'+this.message.join("<li>")
     return this 
   },
   setColor: function(color){

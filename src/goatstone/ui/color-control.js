@@ -3,7 +3,6 @@ var colorControl = Backbone.View.extend({
   el: "body",
   events: {
     "click .change_it": function (v) {
-    	console.log('change it!!!', this)
     	this.trigger('change', {color:'red'})
     }
   },

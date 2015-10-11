@@ -1,61 +1,66 @@
 /* goatstone.todo.todo.js Jose Collas 9.2015 */
 import Backbone from 'backbone'
-import todoEventDispatcher from 'goatstone/event/dispatcher.js'
-import TodoModel from 'goatstone/model/todo.js'
-import Message from 'goatstone/ui/message.js'
-import ColorControl from 'goatstone/ui/color-control.js'
+import todoEventDispatcher from 'goatstone/event/dispatcher'
+import TodoModel from 'goatstone/model/todo'
+import Message from 'goatstone/ui/message'
+import ColorControl from 'goatstone/ui/color-control'
+import Input from 'goatstone/ui/input'
+import Button from 'goatstone/ui/button'
 
-var todoModel, message, colorControl
+var todoModel, message, colorControl, input, button
 todoModel = new TodoModel()
-message = new Message().set('hello').render()
-colorControl = new ColorControl().render()
+colorControl = new ColorControl()
+input = new Input().render()
+message = new Message().set('hello')
+button = new Button()
 
-// todoEventDispatcher
-todoEventDispatcher
-.on('init', v => {
-	console.log('init...')
-})
-.on('all', v => {
-	console.log('all', v);
-})
-.on('a', v => {
-	console.log('a')
-})
-.on('hello', v => {
-	console.log('hello', v)
- 	message.set( '---' + v.id + new Date() ).render()
-})
 // todoModel Backbone Model
 todoModel.on('init', function(){
-	console.log('todoModel : init')
+ 	message.append('todoModel : init')
 })
-todoModel.on('all', function(d){
-	console.log('todoModel : all', d)
+todoModel.on('all', function(v){
+ 	message.append( 'todod model all: ' + v   )
 })
 todoModel.on('change:color', function(model, color) {
 	message.setColor(color)
 })
-// message Backbone View set event on message view only
-message.on('all', function(d, b){
-	console.log('a', arguments)
+// input
+input.on('all', function(event, data){
+	message.set( 'event:  ' +  event + ' data: '+data   ) 
+	todoModel.set({color: 'red'})
+})
+// button
+button.on('activate', function(v){
+	message.append('aaa' + v )
+	todoModel.set({title: ' hello todo'})
 })
 // colorControl Backone View
 colorControl.on('all', (name, data)=>{
-	console.log('all from color control', name, data)
+	message.append('all from color control', name, data)
+})
+ 
+// todoEventDispatcher
+todoEventDispatcher.on('init', v => {
+	message.append( 'todoEventDispatcher init: ' + v ) 
+}).on('all', v => {
+	message.append( 'todoEventDispatcher all: ' + v ) 
+}).on('hello', v => {
+ 	message.append( ' hello '   ) 
 })
 
-// start trigger and set
-todoEventDispatcher
-.trigger( 'init', {id:12333} )
-.trigger( 'a', {id:'X'} )
-.trigger( 'b', {id:2} )
-.trigger( 'hello', {id:2} )
+/*
+ start to trigger events
+*/
+// todoEventDispatcher
+// .trigger( 'init', {id:12333} )
+// .trigger( 'a', {id:'X'} )
+// .trigger( 'hello', {id:2} )
 
-message.trigger( 'change', { "color": "blue" } )
+//message.trigger( 'change', { "color": "blue" } )
 
-todoModel.set({color: 'green'})
+todoModel.set({color: 'azure'})
 
 setTimeout(function(){
-	todoEventDispatcher.trigger( 'hello', {id:22222222} )
-	todoModel.set({color: 'azure'})
+	todoEventDispatcher.trigger( 'hello', {id:2222222} )
+	todoModel.set({color: '#ccc'})
 }, 1000)

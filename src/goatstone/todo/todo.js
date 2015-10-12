@@ -1,107 +1,72 @@
 /* goatstone.todo.todo.js Jose Collas 9.2015 */
 import Backbone from 'backbone'
-import todoEventDispatcher from 'goatstone/event/dispatcher'
 import TodoModel from 'goatstone/model/todo'
 import Message from 'goatstone/ui/message'
 import ColorControl from 'goatstone/ui/color-control'
 import Input from 'goatstone/ui/input'
 import Button from 'goatstone/ui/button'
+import Todos from 'goatstone/ui/todos'
+import Todo from 'goatstone/ui/todo'
+import style from 'goatstone/ui/style'
 
-var todoModel, message, colorControl, input, button
-todoModel = new TodoModel()
+var todoModel, message, colorControl, input, button, todos, todo
 
-var mainStyle = 	{ 
-      color: 'blue',
-      backgroundColor:'#ccc',
-      padding:'12px',
-      position:'relative',
-      display:'inline-block',
-      // margin:'12px',
-      borderRadius:'12px',
-      WebkitTransition: 'all', // note the capital 'W' here
-      msTransition: 'all' // 'ms' is the only lowercase vendor prefix
-    }
-var componentStyle = 	{ 
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      minHeight:'60px'
-    }
-var messageStyle = {
-    width:'90%',
-    margin:'6px'
-}
+// todo
+var tdEl = document.createElement('span')
+todo = new Todo({el:tdEl})
+.setStyle( style.main ).render();
+// todos
+var tdsEl = document.createElement('span')
+todos = new Todos({el:tdsEl})
+.setStyle( style.main ).render();
 
-var messageStyle = {}
-Object.assign(messageStyle, mainStyle, componentStyle, messageStyle)
-
-var mEl = document.createElement('span')
-message = new Message( {el:mEl} )
-.setStyle( messageStyle )
-.set( 'hello' )
-
+// input
 var iEl = document.createElement('span')
 input = new Input( {el:iEl} )
-.setStyle( mainStyle )
-.render()
+.setStyle( style.main ).render()
 input.on('all', function(event, data){
-	//message.set( 'event:  ' +  event + ' data: '+data   ) 
 	todoModel.set({color: 'red'})
 })
 // button
 var bEl = document.createElement('span')
 button = new Button({el: bEl})
-.setStyle(  mainStyle   )
+.setStyle( style.main )
 .render()
 button.on('activate', function(v){
-	message.append('aaa' + v )
 	todoModel.set({title: ' hello todo'})
 })
 // colorControl Backone View
 var ccEl = document.createElement('span')
 colorControl = new ColorControl({el: ccEl})
-.setStyle(  mainStyle   )
-.render()
-colorControl.on('all', (name, data)=>{
-	message.append('all from color control', name, data)
-	message.setColor(data.color)
+.setStyle( style.main ).render()
+.on('change', ( data )=>{
+	todoModel.set({color: data.color})
 })
+
+// message view
+var mEl = document.createElement('span')
+message = new Message( {el:mEl} )
+.setStyle( Object.assign({}, style.main, style.message ) )
+.set( 'hello' )
+
 // add elements to DOM
 document.body.appendChild(iEl)
 document.body.appendChild(mEl)
 document.body.appendChild(bEl)
 document.body.appendChild(ccEl)
+document.body.appendChild(tdsEl)
+document.body.appendChild(tdEl)
 
 // todoModel Backbone Model
-todoModel.on('init', function(){
- 	message.append('todoModel : init')
-})
+todoModel = new TodoModel()
 todoModel.on('all', function(v){
- 	message.append( 'todod model all: ' + v   )
+ 	message.append( ' : ' + v   )
 })
 todoModel.on('change:color', function(model, color) {
-	message.setColor(color)
+	todo.setColor(color).render()
 })
+todoModel.set({color: 'red'})
  
-// todoEventDispatcher
-todoEventDispatcher.on('init', v => {
-	message.append( 'todoEventDispatcher init: ' + v ) 
-}).on('all', v => {
-	message.append( 'todoEventDispatcher all: ' + v ) 
-}).on('hello', v => {
- 	message.append( ' hello '   ) 
-})
-
-/*
- start to trigger events
-*/
-// todoEventDispatcher
-// .trigger( 'init', {id:12333} )
-// .trigger( 'hello', {id:2} )
-
-todoModel.set({color: 'azure'})
-
 setTimeout(function(){
-	todoEventDispatcher.trigger( 'hello', {id:2222222} )
 	todoModel.set({color: 'blue'})
-}, 1000)
+}, 3000)

@@ -16,64 +16,47 @@ var todoModel, message, colorControl, input, button, todos, todo
 todoModel = new TodoModel()
 
 // todo
-var tdEl = document.createElement('span')
-todo = new Todo({el:tdEl})
-.setStyle( style.main ).render();
+todo = new Todo({el:getElement()}).setStyle( style.main ).render();
 // todos
-var tdsEl = document.createElement('span')
-todos = new Todos({el:tdsEl})
-.setStyle( style.main ).render();
-
+todos = new Todos({el:getElement() }).setStyle( style.main ).render();
 // input
-var iEl = document.createElement('span')
-input = new Input( {el:iEl} )
+input = new Input( { el: getElement() } )
 .setStyle( style.main ).render()
 input.on('all', function(event, data){
 	todoModel.set({color: 'red'})
 })
 // button
-var bEl = document.createElement('span')
-button = new Button({el: bEl})
-.setStyle( style.main )
-.render()
+button = new Button( { el: getElement() } )
+.setStyle( style.main ).render()
 button.on('activate', function(v){
 	todoModel.set({title: ' hello todo'})
 })
 // colorControl Backone View
-var ccEl = document.createElement('span')
-colorControl = new ColorControl({el: ccEl})
+colorControl = new ColorControl({el: getElement() })
 .setStyle( style.main ).render()
 .on('change', ( data )=>{
-	todoModel.set({color: data.color})
+	todoModel.set( { color: data.color } )
 })
-
+// message model
 var messageModel = new MessageModel(
 	{
 		a: 'AAAAA'
 	});
-var mEl = document.createElement('span')
 message = new Message( { 
-	el: mEl, model: messageModel 
+	el: getElement(), model: messageModel 
 })
 messageModel.set("text","aaaaa")
 
-// add elements to DOM
-document.body.appendChild(iEl)
-document.body.appendChild(mEl)
-document.body.appendChild(bEl)
-document.body.appendChild(ccEl)
-document.body.appendChild(tdsEl)
-document.body.appendChild(tdEl)
-
+// model.todo.on( 'all' )
 // set up the todoModel
 todoModel.on( 'all', function( v ){
-	//console.log('todoModel : ' , v)
+	console.log('todoModel : ' , v)
 })
 todoModel.on( 'change:color', function( model, color ) {
-
+	// TODO does this go in the model???
 	todoModel.save("title", "abc", {
 		error: function(){ 
-			//console.log('errror')
+			console.log('errror')
 		}	
 	});
 	messageModel.set( 'text', color   )
@@ -86,3 +69,9 @@ todoModel.set( { color: 'green' } )
 setTimeout(function(){
 	todoModel.set( { color: 'blue' } )
 }, 3000)
+
+function getElement(){
+	var el = document.createElement('span')
+	document.body.appendChild( el )
+	return el
+}

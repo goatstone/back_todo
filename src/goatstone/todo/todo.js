@@ -1,7 +1,10 @@
 /* goatstone.todo.todo.js Jose Collas 9.2015 */
 import Backbone from 'backbone'
 import TodoModel from 'goatstone/model/todo'
+
+import MessageModel from 'goatstone/model/Message'
 import Message from 'goatstone/ui/message'
+
 import ColorControl from 'goatstone/ui/color-control'
 import Input from 'goatstone/ui/input'
 import Button from 'goatstone/ui/button'
@@ -10,6 +13,7 @@ import Todo from 'goatstone/ui/todo'
 import style from 'goatstone/ui/style'
 
 var todoModel, message, colorControl, input, button, todos, todo
+todoModel = new TodoModel()
 
 // todo
 var tdEl = document.createElement('span')
@@ -43,11 +47,15 @@ colorControl = new ColorControl({el: ccEl})
 	todoModel.set({color: data.color})
 })
 
-// message view
+var messageModel = new MessageModel(
+	{
+		a: 'AAAAA'
+	});
 var mEl = document.createElement('span')
-message = new Message( {el:mEl} )
-.setStyle( Object.assign({}, style.main, style.message ) )
-.set( 'hello' )
+message = new Message( { 
+	el: mEl, model: messageModel 
+})
+messageModel.set("text","aaaaa")
 
 // add elements to DOM
 document.body.appendChild(iEl)
@@ -57,16 +65,24 @@ document.body.appendChild(ccEl)
 document.body.appendChild(tdsEl)
 document.body.appendChild(tdEl)
 
-// todoModel Backbone Model
-todoModel = new TodoModel()
-todoModel.on('all', function(v){
- 	message.append( ' : ' + v   )
+// set up the todoModel
+todoModel.on( 'all', function( v ){
+	//console.log('todoModel : ' , v)
 })
-todoModel.on('change:color', function(model, color) {
-	todo.setColor(color).render()
+todoModel.on( 'change:color', function( model, color ) {
+
+	todoModel.save("title", "abc", {
+		error: function(){ 
+			//console.log('errror')
+		}	
+	});
+	messageModel.set( 'text', color   )
+
 })
-todoModel.set({color: 'red'})
+
+// set the todoModel
+todoModel.set( { color: 'green' } )
  
 setTimeout(function(){
-	todoModel.set({color: 'blue'})
+	todoModel.set( { color: 'blue' } )
 }, 3000)

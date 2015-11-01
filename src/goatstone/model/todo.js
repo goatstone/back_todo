@@ -1,5 +1,6 @@
 /* goatstone.model.todo.js Jose Collas 9.2015 */
 var Todo = Backbone.Model.extend({
+   url: "http://192.168.1.7:3000/todo",
    constructor: function() {
     	this.defaults = {
     		clickCount:0,

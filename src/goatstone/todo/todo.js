@@ -12,63 +12,66 @@ import Todos from 'goatstone/ui/todos'
 import Todo from 'goatstone/ui/todo'
 import style from 'goatstone/ui/style'
 
-var todoModel, message, colorControl, input, button, todos, todo
-todoModel = new TodoModel()
+var todoModel, message, colorControl, input, button, todos, todo, messageModel
 
-// todo
-todo = new Todo({el:getElement()}).setStyle( style.main ).render();
 // todos
-todos = new Todos({el:getElement() }).setStyle( style.main ).render();
+//todos = new Todos({el:getElement() }).setStyle( style.main ).render();
+
 // input
 input = new Input( { el: getElement() } )
-.setStyle( style.main ).render()
-input.on('all', function(event, data){
-	todoModel.set({color: 'red'})
+.on('change.input', function( data ){
+	todoModel.set( { title: data } )
 })
+.on('change.textarea', function( data ){
+	todoModel.set( { todo: data } )
+})
+
 // button
-button = new Button( { el: getElement() } )
-.setStyle( style.main ).render()
-button.on('activate', function(v){
-	todoModel.set({title: ' hello todo'})
-})
-// colorControl Backone View
+// button = new Button( { el: getElement() } )
+// .setStyle( style.main ).render()
+// button.on('activate', function(v){
+// 	todoModel.set({title: ' hello todo'})
+// })
+
+// colorControl 
 colorControl = new ColorControl({el: getElement() })
-.setStyle( style.main ).render()
 .on('change', ( data )=>{
 	todoModel.set( { color: data.color } )
 })
-// message model
-var messageModel = new MessageModel(
+
+// message 
+messageModel = new MessageModel(
 	{
-		a: 'AAAAA'
+		text: 'hello todo!'
 	});
 message = new Message( { 
 	el: getElement(), model: messageModel 
 })
-messageModel.set("text","aaaaa")
 
-// model.todo.on( 'all' )
+// todo model and view
+todoModel = new TodoModel()
+todo = new Todo(
+	{
+		el: getElement(),
+		model: todoModel
+	} )
+
 // set up the todoModel
-todoModel.on( 'all', function( v ){
-	console.log('todoModel : ' , v)
+todoModel
+.on( 'all', function( v ){
+	//console.log('todoModel : ' , v)
 })
-todoModel.on( 'change:color', function( model, color ) {
+.on( 'change:color', function( model, color ) {
 	// TODO does this go in the model???
-	todoModel.save("title", "abc", {
+	todoModel.save("title", "todo with save method", {
 		error: function(){ 
 			console.log('errror')
 		}	
 	});
 	messageModel.set( 'text', color   )
-
 })
+.set( { color: 'green' } )
 
-// set the todoModel
-todoModel.set( { color: 'green' } )
- 
-setTimeout(function(){
-	todoModel.set( { color: 'blue' } )
-}, 3000)
 
 function getElement(){
 	var el = document.createElement('span')

@@ -4,19 +4,37 @@ var ReactDOM = require('react-dom');
 var Todo = Backbone.View.extend({
   initialize: function(a) {
     this.title =  'abc',
-    this.style = {};
+    this.style = {
+      'width':'400px',
+      'backgroundColor':'green',
+      'padding':'15px',
+      'borderRadius':'10px',
+      'fontFamily':'sans-serif',
+      'fontSize':'2em',
+      'color': '#eee',
+      'marginLeft': '40px',
+      'marginTop': '70px',
+      'zIndex':'1000'
+    };
+    this.listenTo( this.model, 'change', this.render )
     return this
   },
   render: function(msg) {
+    this.style.backgroundColor = this.model.get('color')
     ReactDOM.render(
-    	<section style={this.style}>TODO
-    	{  this.title } 
-    	</section>, 
+    	<section style={this.style}>
+
+      {  this.model.get('title') } 
+      <br />
+      {  this.model.get('todo') } 
+    	
+      </section>
+      , 
     	this.el)
     return this 
   },
   setStyle: function(s){
-    this.style = s    
+    //this.style = s    
     return this
   },
   setColor: function(c){

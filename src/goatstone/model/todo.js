@@ -5,8 +5,8 @@ var Todo = Backbone.Model.extend({
     	this.defaults = {
     		clickCount:0,
     		color:'aqua',
-    		title:'',
-    		todo:''
+    		title:'A Todo Title',
+    		todo:'Something to do.'
     	};
     	Backbone.Model.apply(this, arguments)
   },

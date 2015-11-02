@@ -16,8 +16,15 @@ var Todo = Backbone.View.extend({
       'marginTop': '70px',
       'zIndex':'1000'
     };
+
     this.listenTo( this.model, 'change', this.render )
+    this.listenTo( this.model, 'invalid', this.setInvalid )
+
     return this
+  },
+  eMsg: "hello",
+  setInvalid: function(){
+    console.log('setvalid')
   },
   render: function(msg) {
     this.style.backgroundColor = this.model.get('color')

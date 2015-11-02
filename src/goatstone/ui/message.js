@@ -5,7 +5,15 @@ var ReactDOM = require('react-dom');
 var Message = Backbone.View.extend({
   initialize: function(a) {
     this.message = [],
-    this.style = { 'backgroundColor': 'azure' };
+    this.style = { 
+      'backgroundColor': '#ccc', 
+      'position': 'fixed',
+      'bottom': '5px',
+      'right': '5px',
+      'width': '200px',
+      'padding': '20px',
+      'borderRadius': '12px'   
+    };
     this.listenTo( this.model, 'change', this.render )
     return this
   },

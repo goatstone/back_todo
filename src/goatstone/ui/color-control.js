@@ -23,6 +23,16 @@ var colorControl = Backbone.View.extend({
     this.rStyle = Object.assign({}, colorStyle, {background:'red'})
     this.gStyle = Object.assign({}, colorStyle, {background:'green'})
     this.bStyle = Object.assign({}, colorStyle, {background:'blue'})
+    this.style = {
+      'position': 'absolute',
+      'top':'5px',
+      'right':'5px',
+      'background':'#ccc',
+      'width':'150px',
+      'padding': '12px',
+      'borderRadius': '5px'
+    }
+    this.render()
   },
   render: function(msg) {
     ReactDOM.render(
@@ -33,10 +43,6 @@ var colorControl = Backbone.View.extend({
         </div>, 
       this.el)
     return this 
-  },
-  setStyle: function(s){
-    this.style = s    
-    return this;
-  }
+  } 
 })
 export default colorControl

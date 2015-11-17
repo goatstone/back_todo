@@ -89,61 +89,61 @@
 	
 	var _goatstoneUiStyle2 = _interopRequireDefault(_goatstoneUiStyle);
 	
-	var todoModel, message, colorControl, input, button, todos, todo;
-	
-	todoModel = new _goatstoneModelTodo2['default']();
-	// todo UI
-	todo = new _goatstoneUiTodo2['default']({
-		el: getElement(),
-		model: todoModel
-	}).setStyle(_goatstoneUiStyle2['default'].main).render();
+	var todoModel, message, colorControl, input, button, todos, todo, messageModel;
 	
 	// todos
-	todos = new _goatstoneUiTodos2['default']({ el: getElement() }).setStyle(_goatstoneUiStyle2['default'].main).render();
+	//todos = new Todos({el:getElement() }).setStyle( style.main ).render();
+	
 	// input
-	input = new _goatstoneUiInput2['default']({ el: getElement() }).setStyle(_goatstoneUiStyle2['default'].main).render();
-	input.on('all', function (event, data) {
-		todoModel.set({ color: 'red' });
+	input = new _goatstoneUiInput2['default']({ el: getElement() }).on('change.input', function (data) {
+		todoModel.set({ title: data });
+	}).on('change.textarea', function (data) {
+		todoModel.set({ todo: data });
 	});
+	
 	// button
-	button = new _goatstoneUiButton2['default']({ el: getElement() }).setStyle(_goatstoneUiStyle2['default'].main).render();
-	button.on('activate', function (v) {
-		todoModel.set({ title: ' hello todo' });
-	});
-	// colorControl Backone View
-	colorControl = new _goatstoneUiColorControl2['default']({ el: getElement() }).setStyle(_goatstoneUiStyle2['default'].main).render().on('change', function (data) {
+	// button = new Button( { el: getElement() } )
+	// .setStyle( style.main ).render()
+	// button.on('activate', function(v){
+	// 	todoModel.set({title: ' hello todo'})
+	// })
+	
+	// colorControl
+	colorControl = new _goatstoneUiColorControl2['default']({ el: getElement() }).on('change', function (data) {
 		todoModel.set({ color: data.color });
 	});
-	// message model
-	var messageModel = new _goatstoneModelMessage2['default']({
-		a: 'AAAAA'
+	
+	// message
+	messageModel = new _goatstoneModelMessage2['default']({
+		text: 'hello todo!'
 	});
 	message = new _goatstoneUiMessage2['default']({
 		el: getElement(), model: messageModel
 	});
-	messageModel.set("text", "aaaaa");
 	
-	// model.todo.on( 'all' )
+	// todo model and view
+	todoModel = new _goatstoneModelTodo2['default']();
+	todo = new _goatstoneUiTodo2['default']({
+		el: getElement(),
+		model: todoModel
+	});
+	
 	// set up the todoModel
 	todoModel.on('all', function (v) {
-		console.log('todoModel : ', v);
-	});
-	todoModel.on('change:color', function (model, color) {
+		//console.log('todoModel : ' , v)
+	}).on('change:color', function (model, color) {
 		// TODO does this go in the model???
-		todoModel.save("title", "abc", {
+		todoModel.save({
 			error: function error() {
-				console.log('errror');
+				// console.log('errror')
 			}
 		});
 		messageModel.set('text', color);
-	});
-	
-	// set the todoModel
-	todoModel.set({ color: 'green' });
-	
-	setTimeout(function () {
-		todoModel.set({ color: 'blue' });
-	}, 3000);
+	}).on("invalid", function (model, error) {
+		console.log(' invalid : ', error);
+		//set the input
+		input.setError(error);
+	}).set({ color: 'green' });
 	
 	function getElement() {
 		var el = document.createElement('span');
@@ -12838,10 +12838,15 @@
 	    this.defaults = {
 	      clickCount: 0,
 	      color: 'aqua',
-	      title: '',
-	      todo: ''
+	      title: 'A Todo Title',
+	      todo: 'Something to do.'
 	    };
 	    Backbone.Model.apply(this, arguments);
+	  },
+	  validate: function validate(attrs, options) {
+	    if (attrs.title.length < 2) {
+	      return "Invalid todo value entered";
+	    }
 	  },
 	  getInformation: function getInformation() {
 	    var str = JSON.stringify(this.attributes);
@@ -12899,11 +12904,13 @@
 	var Message = Backbone.View.extend({
 	  initialize: function initialize(a) {
 	    this.message = [], this.style = {
-	      'backgroundColor': 'azure',
+	      'backgroundColor': '#ccc',
 	      'position': 'fixed',
-	      'bottom': '0',
-	      'right': '0',
-	      'width': '200px'
+	      'bottom': '5px',
+	      'right': '5px',
+	      'width': '200px',
+	      'padding': '20px',
+	      'borderRadius': '12px'
 	    };
 	    this.listenTo(this.model, 'change', this.render);
 	    return this;
@@ -32560,6 +32567,16 @@
 	    this.rStyle = Object.assign({}, colorStyle, { background: 'red' });
 	    this.gStyle = Object.assign({}, colorStyle, { background: 'green' });
 	    this.bStyle = Object.assign({}, colorStyle, { background: 'blue' });
+	    this.style = {
+	      'position': 'absolute',
+	      'top': '5px',
+	      'right': '5px',
+	      'background': '#ccc',
+	      'width': '150px',
+	      'padding': '12px',
+	      'borderRadius': '5px'
+	    };
+	    this.render();
 	  },
 	  render: function render(msg) {
 	    ReactDOM.render(React.createElement(
@@ -32582,10 +32599,6 @@
 	      )
 	    ), this.el);
 	    return this;
-	  },
-	  setStyle: function setStyle(s) {
-	    this.style = s;
-	    return this;
 	  }
 	});
 	exports['default'] = colorControl;
@@ -32605,26 +32618,62 @@
 	var ReactDOM = __webpack_require__(165);
 	var Input = Backbone.View.extend({
 	  events: {
-	    'keyup': function keyup(v) {
-	      this.trigger('change', this);
+	    'keyup input': function keyupInput(v) {
+	      this.trigger('change.input', v.target.value);
+	    },
+	    'keyup textarea': function keyupTextarea(v) {
+	      this.trigger('change.textarea', v.target.value);
 	    }
 	  },
 	  initialize: function initialize() {
-	    this.style = {};
+	    this.style = {
+	      'position': 'absolute',
+	      'bottom': '5px',
+	      'left': '5px',
+	      'width': '240px',
+	      'backgroundColor': '#ccc',
+	      'padding': '6px',
+	      'borderRadius': '6px',
+	      'fontFamily': 'sans-serif',
+	      'display': 'inline-block',
+	      'borderRadius': '5px',
+	      'zIndex': '-1000'
+	    };
+	
+	    this.inputStyle = {
+	      'margin': '6px',
+	      'display': 'block'
+	    };
+	    this.labelStyle = {
+	      'padding': '3px'
+	    };
 	    this.render();
 	    return this;
 	  },
+	  errorMsg: '',
 	  render: function render(msg) {
 	    ReactDOM.render(React.createElement(
-	      'label',
+	      'div',
 	      { style: this.style },
-	      React.createElement('input', null)
+	      React.createElement(
+	        'label',
+	        { style: this.labelStyle },
+	        ' Title  ',
+	        this.errorMsg,
+	        React.createElement('input', { style: this.inputStyle })
+	      ),
+	      React.createElement(
+	        'label',
+	        { style: this.labelStyle },
+	        ' Todo',
+	        React.createElement('textarea', { style: this.inputStyle })
+	      )
 	    ), this.el);
 	    return this;
 	  },
-	  setStyle: function setStyle(s) {
-	    this.style = s;
-	    return this;
+	  setError: function setError(msg) {
+	    this.errorMsg = msg;
+	    this.render();
 	  },
 	  focus: function focus() {
 	    //this.el_1.focus();
@@ -32718,21 +32767,41 @@
 	var ReactDOM = __webpack_require__(165);
 	var Todo = Backbone.View.extend({
 	  initialize: function initialize(a) {
-	    this.title = 'abc', this.style = {};
+	    this.title = 'abc', this.style = {
+	      'width': '400px',
+	      'backgroundColor': 'green',
+	      'padding': '15px',
+	      'borderRadius': '10px',
+	      'fontFamily': 'sans-serif',
+	      'fontSize': '2em',
+	      'color': '#eee',
+	      'marginLeft': '40px',
+	      'marginTop': '70px',
+	      'zIndex': '1000'
+	    };
+	
 	    this.listenTo(this.model, 'change', this.render);
+	    this.listenTo(this.model, 'invalid', this.setInvalid);
+	
 	    return this;
 	  },
+	  eMsg: "hello",
+	  setInvalid: function setInvalid() {
+	    console.log('setvalid');
+	  },
 	  render: function render(msg) {
+	    this.style.backgroundColor = this.model.get('color');
 	    ReactDOM.render(React.createElement(
 	      'section',
 	      { style: this.style },
-	      'TODO',
-	      this.model.get('color')
+	      this.model.get('title'),
+	      React.createElement('br', null),
+	      this.model.get('todo')
 	    ), this.el);
 	    return this;
 	  },
 	  setStyle: function setStyle(s) {
-	    this.style = s;
+	    //this.style = s   
 	    return this;
 	  },
 	  setColor: function setColor(c) {

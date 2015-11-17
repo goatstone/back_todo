@@ -10,6 +10,11 @@ var Todo = Backbone.Model.extend({
     	};
     	Backbone.Model.apply(this, arguments)
   },
+  validate: function( attrs, options ){
+    if( attrs.title.length < 2 ){
+      return "Invalid todo value entered"
+    }
+  },
   getInformation: function(){
   	var str = JSON.stringify(this.attributes)
   	return 'todo model' + str 

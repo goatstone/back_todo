@@ -63,12 +63,17 @@ todoModel
 })
 .on( 'change:color', function( model, color ) {
 	// TODO does this go in the model???
-	todoModel.save("title", "todo with save method", {
+	todoModel.save( {
 		error: function(){ 
-			console.log('errror')
+			// console.log('errror')
 		}	
 	});
 	messageModel.set( 'text', color   )
+})
+.on("invalid", function(model, error) {
+	console.log(' invalid : ', error )
+	//set the input 
+	input.setError( error )
 })
 .set( { color: 'green' } )
 

@@ -35,11 +35,12 @@ var Input = Backbone.View.extend({
     this.render()
     return this;
   },
+  errorMsg: '',
   render: function(msg) {
     ReactDOM.render(
        <div style={ this.style }>
        
-        <label style={ this.labelStyle } > Title
+        <label style={ this.labelStyle } > Title  { this.errorMsg }
           <input  style={ this.inputStyle } />
         </label> 
 
@@ -50,6 +51,10 @@ var Input = Backbone.View.extend({
        </div>
         , this.el)
     return this 
+  },
+  setError: function(msg){
+    this.errorMsg = msg
+    this.render()
   },
   focus: function(){
     //this.el_1.focus();

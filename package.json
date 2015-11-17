@@ -1,0 +1,26 @@
+{
+  "name": "webpack-es6-demo",
+  "version": "1.0.0",
+  "description": "A small demo project that shows how to use webpack for client-side development in ECMAScript 6.",
+  "scripts": {
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "babel-core": "*",
+    "babel-loader": "*",
+    "backbone": "^1.2.3",
+    "body-parser": "^1.14.1",
+    "cors": "^2.7.1",
+    "express": "^4.13.3",
+    "jquery": "^2.1.4",
+    "jquery2": "^2.0.3-a",
+    "multer": "^1.1.0",
+    "node-libs-browser": "*",
+    "webpack": "*",
+    "webpack-dev-server": "^1.12.1"
+  },
+  "dependencies": {
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0"
+  }
+}
